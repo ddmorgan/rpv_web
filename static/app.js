@@ -23,10 +23,13 @@ const columns = [
   ["fluence_n_cm2", "Fluence"],
   ["flux_n_cm2_sec", "Flux"],
   ["Product Form", "Product Form"],
+  ["Reactor Type", "Reactor"],
   ["wt_percent_Cu", "Cu wt%"],
   ["wt_percent_Ni", "Ni wt%"],
   ["wt_percent_Mn", "Mn wt%"],
-  ["wt_percent_P", "P wt%"]
+  ["wt_percent_P", "P wt%"],
+  ["wt_percent_Si", "Si wt%"],
+  ["wt_percent_C", "C wt%"]
 ];
 
 async function init() {

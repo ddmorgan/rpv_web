@@ -2,6 +2,7 @@
   {
     "alloy": "demo-A",
     "Product Form": "P",
+    "Reactor Type": "PWR",
     "temperature_C": 290,
     "wt_percent_Cu": 0.12,
     "wt_percent_Ni": 0.69,

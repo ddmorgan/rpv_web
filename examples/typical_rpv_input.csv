@@ -1,0 +1,6 @@
+alloy,Product Form,Reactor Type,temperature_C,wt_percent_Cu,wt_percent_Ni,wt_percent_Mn,wt_percent_P,wt_percent_Si,wt_percent_C,flux_n_cm2_sec,fluence_n_cm2
+PWR-plate-lowCu,P,PWR,290,0.08,0.72,1.35,0.008,0.22,0.16,3.0e10,6.0e19
+PWR-plate-medCu,P,PWR,290,0.14,0.78,1.42,0.010,0.24,0.15,3.0e10,1.0e20
+PWR-weld-highNi,W,PWR,288,0.18,1.05,1.55,0.012,0.20,0.10,5.0e10,8.0e19
+BWR-forging,F,BWR,285,0.05,0.62,1.20,0.009,0.25,0.18,8.0e9,4.0e19
+SRM-reference,SRM,PWR,292,0.16,0.65,1.48,0.011,0.23,0.21,8.6e10,1.5e19

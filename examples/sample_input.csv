@@ -1,4 +1,4 @@
-alloy,Product Form,temperature_C,wt_percent_Cu,wt_percent_Ni,wt_percent_Mn,wt_percent_P,wt_percent_Si,wt_percent_C,flux_n_cm2_sec,fluence_n_cm2
-demo-A,P,290,0.12,0.69,1.40,0.009,0.22,0.14,3.0e10,1.0e20
-demo-B,SRM,292,0.17,0.64,1.478,0.011,0.225,0.217,8.65e10,1.46e19
-demo-C,F,287,0.04,0.74,0.60,0.012,0.23,0.21,1.45e11,4.385e19
+alloy,Product Form,Reactor Type,temperature_C,wt_percent_Cu,wt_percent_Ni,wt_percent_Mn,wt_percent_P,wt_percent_Si,wt_percent_C,flux_n_cm2_sec,fluence_n_cm2
+demo-A,P,PWR,290,0.12,0.69,1.40,0.009,0.22,0.14,3.0e10,1.0e20
+demo-B,SRM,PWR,292,0.17,0.64,1.478,0.011,0.225,0.217,8.65e10,1.46e19
+demo-C,F,BWR,287,0.04,0.74,0.60,0.012,0.23,0.21,1.45e11,4.385e19

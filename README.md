@@ -6,8 +6,10 @@ Small upload-based web app for reactor pressure vessel steel embrittlement predi
 
 - `E900`: ASTM E900 formula ported from `RPV_model_benchmarking/models.py`
 - `EONY`: EONY formula ported from `RPV_model_benchmarking/models.py`
+- `GBR`: trained gradient boosting regressor from the upstream `model_files/GBR/fullfit` artifacts
+- `GKRR`: trained Gaussian kernel ridge regressor from the upstream `model_files/GKRR/fullfit` artifacts
 
-The app reports benchmark uncertainty bands using the five-fold residual CSVs from the source repository. The one-sigma value is the standard deviation of prediction minus measured `Measured DT41J  [C]`; 95% bands use `prediction +/- 1.96 * sigma`.
+The app reports benchmark uncertainty bands from the source repository residual summaries. The one-sigma value is the standard deviation of prediction minus measured `Measured DT41J  [C]`; 95% bands use `prediction +/- 1.96 * sigma`.
 
 ## Input Columns
 
@@ -22,13 +24,19 @@ CSV, XLSX, and JSON uploads are supported. Required columns:
 - `flux_n_cm2_sec`
 - `fluence_n_cm2`
 
+For `GBR`, include `Reactor Type` with `PWR` or `BWR`. If it is omitted, the app treats it as `PWR`.
+
+For `GKRR`, include `wt_percent_Si` and `wt_percent_C`. The app computes `at_percent_*` values from weight percent using Fe as the balance element. If `effective_fluence` is omitted, the app treats it as equal to `fluence_n_cm2`.
+
 Optional columns:
 
 - `alloy`
-- `model` with values such as `E900`, `EONY`, or `E900,EONY`
+- `model` with values such as `E900`, `EONY`, `GBR`, `GKRR`, or `E900,EONY,GBR,GKRR`
 - `wt_percent_Si`
 - `wt_percent_C`
 - `Reactor Type`
+- `effective_fluence`
+- `at_percent_Cu`, `at_percent_Ni`, `at_percent_Mn`, `at_percent_P`, `at_percent_Si`, `at_percent_C`
 
 See `examples/sample_input.csv`.
 
