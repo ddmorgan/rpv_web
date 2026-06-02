@@ -174,6 +174,19 @@ NUMERIC_COLUMNS = {
     "fluence_n_cm2",
 }
 
+DOMAIN_NUMERIC_COLUMNS = (
+    "temperature_C",
+    "wt_percent_Cu",
+    "wt_percent_Ni",
+    "wt_percent_Mn",
+    "wt_percent_P",
+    "wt_percent_Si",
+    "wt_percent_C",
+    "fluence_n_cm2",
+    "flux_n_cm2_sec",
+)
+DOMAIN_CATEGORICAL_COLUMNS = ("Product Form", "Reactor Type")
+
 GKRR_ATOMIC_ELEMENTS = ("Cu", "Ni", "Mn", "P", "Si", "C")
 ATOMIC_WEIGHTS = {
     "Fe": 55.845,
@@ -332,6 +345,7 @@ def predict(df: pd.DataFrame, selected_models: list[str] | None = None) -> dict[
 
             pred = predict_one(model, row)
             stats = benchmark_stats(model)
+            domain = domain_assessment(model, row)
             sigma = stats.get("residual_std_degC")
             lower_95 = pred - 1.96 * sigma if sigma is not None else None
             upper_95 = pred + 1.96 * sigma if sigma is not None else None
@@ -347,6 +361,11 @@ def predict(df: pd.DataFrame, selected_models: list[str] | None = None) -> dict[
                     "lower_95_degC": _round(lower_95),
                     "upper_95_degC": _round(upper_95),
                     "uncertainty_source": "five-fold benchmark residual standard deviation",
+                    "domain_status": domain["status"],
+                    "domain_in_range": domain["in_range"],
+                    "domain_outside_count": domain["outside_count"],
+                    "domain_outside_features": domain["outside_features"],
+                    "domain_basis": domain["basis"],
                     "temperature_C": _round(row["temperature_C"]),
                     "fluence_n_cm2": _sci(row["fluence_n_cm2"]),
                     "flux_n_cm2_sec": _sci(row["flux_n_cm2_sec"]),
@@ -367,6 +386,7 @@ def predict(df: pd.DataFrame, selected_models: list[str] | None = None) -> dict[
         "result_rows": len(records),
         "warnings": warnings,
         "benchmark": {model: benchmark_stats(model) for model in models},
+        "domain": {model: benchmark_domain(model) for model in models},
         "results": records,
     }
 
@@ -656,6 +676,76 @@ def benchmark_stats(model: str) -> dict[str, Any]:
         "residual_std_degC": _round(float(residuals.std(ddof=1))),
         "mae_degC": _round(float(residuals.abs().mean())),
         "rmse_degC": _round(float(np.sqrt(np.mean(np.square(residuals))))),
+    }
+
+
+@lru_cache(maxsize=None)
+def benchmark_domain(model: str) -> dict[str, Any]:
+    df = benchmark_domain_frame(model)
+    numeric_ranges = {}
+    for column in DOMAIN_NUMERIC_COLUMNS:
+        if column in df:
+            values = pd.to_numeric(df[column], errors="coerce").dropna()
+            if not values.empty:
+                numeric_ranges[column] = {
+                    "min": _round(float(values.min()), 6),
+                    "max": _round(float(values.max()), 6),
+                }
+
+    categories = {}
+    for column in DOMAIN_CATEGORICAL_COLUMNS:
+        if column in df:
+            values = df[column].dropna().astype(str).str.strip().str.upper()
+            categories[column] = sorted(value for value in values.unique() if value)
+
+    return {
+        "n": int(df.shape[0]),
+        "source": "benchmark feature ranges",
+        "numeric_ranges": numeric_ranges,
+        "categories": categories,
+    }
+
+
+@lru_cache(maxsize=None)
+def benchmark_domain_frame(model: str) -> pd.DataFrame:
+    paths = sorted(glob.glob(str(SUMMARY_ROOT / model / "5fold" / "*.csv")))
+    if not paths:
+        paths = sorted(glob.glob(str(SUMMARY_ROOT / "EONY" / "5fold" / "*.csv")))
+    if not paths:
+        return pd.DataFrame()
+    return pd.concat((pd.read_csv(path) for path in paths), ignore_index=True)
+
+
+def domain_assessment(model: str, row: pd.Series) -> dict[str, Any]:
+    domain = benchmark_domain(model)
+    outside = []
+
+    for column, limits in domain["numeric_ranges"].items():
+        value = row.get(column)
+        if value is None or pd.isna(value):
+            continue
+        numeric_value = float(value)
+        min_value = float(limits["min"])
+        max_value = float(limits["max"])
+        if numeric_value < min_value:
+            outside.append(f"{column} below {min_value:g}")
+        elif numeric_value > max_value:
+            outside.append(f"{column} above {max_value:g}")
+
+    for column, allowed_values in domain["categories"].items():
+        value = row.get(column)
+        if value is None or pd.isna(value):
+            continue
+        text = str(value).strip().upper()
+        if text and text not in allowed_values:
+            outside.append(f"{column} not in {', '.join(allowed_values)}")
+
+    return {
+        "status": "In domain" if not outside else "Out of domain",
+        "in_range": not outside,
+        "outside_count": len(outside),
+        "outside_features": "; ".join(outside),
+        "basis": f"{domain['source']} (n={domain['n']})",
     }
 
 

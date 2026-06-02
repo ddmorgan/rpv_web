@@ -3,7 +3,7 @@ import unittest
 
 import pandas as pd
 
-from predictors import MODEL_FILE_ROOT, benchmark_stats, predict
+from predictors import MODEL_FILE_ROOT, benchmark_domain, benchmark_stats, predict
 
 
 class PredictorTests(unittest.TestCase):
@@ -15,6 +15,8 @@ class PredictorTests(unittest.TestCase):
         by_model = {row["model"]: row for row in result["results"]}
         self.assertAlmostEqual(by_model["E900"]["predicted_tts_degC"], 85.039, places=3)
         self.assertAlmostEqual(by_model["EONY"]["predicted_tts_degC"], 75.529, places=3)
+        self.assertEqual(by_model["E900"]["domain_status"], "In domain")
+        self.assertEqual(by_model["EONY"]["domain_status"], "In domain")
 
     def test_benchmark_stats_loaded(self):
         e900 = benchmark_stats("E900")
@@ -40,6 +42,22 @@ class PredictorTests(unittest.TestCase):
         by_model = {row["model"]: row for row in result["results"]}
         self.assertIsInstance(by_model["GBR"]["predicted_tts_degC"], float)
         self.assertIsInstance(by_model["GKRR"]["predicted_tts_degC"], float)
+
+    def test_domain_flags_outside_range(self):
+        df = pd.read_csv("examples/sample_input.csv")
+        df.loc[0, "temperature_C"] = 999
+        result = predict(df.iloc[[0]], ["E900"])
+        row = result["results"][0]
+
+        self.assertEqual(row["domain_status"], "Out of domain")
+        self.assertIn("temperature_C", row["domain_outside_features"])
+
+    def test_benchmark_domain_loaded(self):
+        domain = benchmark_domain("E900")
+
+        self.assertEqual(domain["n"], 4535)
+        self.assertIn("temperature_C", domain["numeric_ranges"])
+        self.assertIn("Product Form", domain["categories"])
 
     def test_ml_artifacts_present(self):
         self.assertTrue((MODEL_FILE_ROOT / "GBR" / "fullfit" / "GradientBoostingRegressor.pkl").exists())

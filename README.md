@@ -1,4 +1,4 @@
-# RPV Predictor Web App
+# RPV Predictor Web App - Domain Output Version
 
 Small upload-based web app for reactor pressure vessel steel embrittlement predictions.
 
@@ -10,6 +10,8 @@ Small upload-based web app for reactor pressure vessel steel embrittlement predi
 - `GKRR`: trained Gaussian kernel ridge regressor from the upstream `model_files/GKRR/fullfit` artifacts
 
 The app reports benchmark uncertainty bands from the source repository residual summaries. The one-sigma value is the standard deviation of prediction minus measured `Measured DT41J  [C]`; 95% bands use `prediction +/- 1.96 * sigma`.
+
+This version also reports a domain/applicability check for every prediction. `Domain` is `In domain` when the uploaded row falls within the benchmark feature ranges used by the source repository, and `Out of domain` when one or more numeric fields are outside those ranges or categorical fields are not represented. The output includes the number of out-of-domain fields and a text description of which fields are outside range.
 
 ## Input Columns
 
