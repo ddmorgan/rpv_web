@@ -18,7 +18,7 @@ from predictors import available_models, dataframe_to_csv, predict, read_input_f
 ROOT = Path(__file__).resolve().parent
 STATIC_ROOT = ROOT / "static"
 EXAMPLE_ROOT = ROOT / "examples"
-HOST = os.environ.get("HOST", "127.0.0.1")
+HOST = os.environ.get("HOST", "0.0.0.0")
 PORT = int(os.environ.get("PORT", "8000"))
 
 
