@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>RPV Predictor</title>
+    <link rel="stylesheet" href="/static/styles.css">
+  </head>
+  <body>
+    <header class="topbar">
+      <div class="brand">
+        <img src="/static/vessel.svg" alt="" class="brand-mark">
+        <div>
+          <h1>RPV Predictor</h1>
+          <p>Transition temperature shift with benchmark uncertainty bands</p>
+        </div>
+      </div>
+      <a class="source-link" href="https://github.com/uw-cmg/RPV_model_benchmarking" target="_blank" rel="noreferrer">Source</a>
+    </header>
+
+    <main class="workspace">
+      <section class="control-surface" aria-label="Prediction controls">
+        <div class="section-title">
+          <h2>Input</h2>
+          <a href="/examples/sample_input.csv" download>Sample CSV</a>
+        </div>
+
+        <form id="predict-form">
+          <fieldset>
+            <legend>Models</legend>
+            <div id="model-list" class="model-list" aria-live="polite"></div>
+          </fieldset>
+
+          <label class="dropzone" id="dropzone">
+            <input id="file-input" name="file" type="file" accept=".csv,.json,.xlsx,.xls" required>
+            <span class="drop-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" role="img">
+                <path d="M12 3v12m0-12 4 4m-4-4-4 4M4 17v2c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2v-2"/>
+              </svg>
+            </span>
+            <span>
+              <strong id="file-name">Choose input file</strong>
+              <small>CSV, XLSX, or JSON</small>
+            </span>
+          </label>
+
+          <div class="actions">
+            <button type="submit" class="primary-button">
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="m8 5 11 7-11 7V5Z"/>
+              </svg>
+              Run
+            </button>
+            <button type="button" id="download-button" class="secondary-button" disabled>
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M12 3v12m0 0 4-4m-4 4-4-4M5 21h14"/>
+              </svg>
+              CSV
+            </button>
+          </div>
+        </form>
+
+        <div id="status" class="status" role="status"></div>
+      </section>
+
+      <section class="result-surface" aria-label="Prediction results">
+        <div class="section-title">
+          <h2>Results</h2>
+          <span id="result-count">No results</span>
+        </div>
+
+        <div id="summary-grid" class="summary-grid"></div>
+
+        <div class="table-wrap">
+          <table id="result-table">
+            <thead></thead>
+            <tbody>
+              <tr class="empty-row">
+                <td>Upload a file to populate predictions.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+
+    <script src="/static/app.js"></script>
+  </body>
+</html>

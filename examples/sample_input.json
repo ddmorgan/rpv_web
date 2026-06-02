@@ -1,0 +1,15 @@
+[
+  {
+    "alloy": "demo-A",
+    "Product Form": "P",
+    "temperature_C": 290,
+    "wt_percent_Cu": 0.12,
+    "wt_percent_Ni": 0.69,
+    "wt_percent_Mn": 1.4,
+    "wt_percent_P": 0.009,
+    "wt_percent_Si": 0.22,
+    "wt_percent_C": 0.14,
+    "flux_n_cm2_sec": 30000000000,
+    "fluence_n_cm2": 100000000000000000000
+  }
+]

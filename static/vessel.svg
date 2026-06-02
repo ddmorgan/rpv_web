@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80" role="img" aria-label="Reactor vessel mark">
+  <rect width="80" height="80" rx="8" fill="#edf3ef"/>
+  <path d="M26 12h28c4 0 7 3 7 7v42c0 4-3 7-7 7H26c-4 0-7-3-7-7V19c0-4 3-7 7-7Z" fill="#ffffff" stroke="#3f725f" stroke-width="3"/>
+  <path d="M28 22h24M28 58h24" stroke="#3f725f" stroke-width="3" stroke-linecap="round"/>
+  <path d="M40 26v28M31 34h18M31 46h18" stroke="#3e6680" stroke-width="3" stroke-linecap="round"/>
+  <circle cx="40" cy="40" r="9" fill="#fff7e9" stroke="#b77932" stroke-width="3"/>
+  <path d="M18 25c-5 6-7 13-7 21M62 25c5 6 7 13 7 21" stroke="#aeb9b0" stroke-width="3" stroke-linecap="round"/>
+</svg>
